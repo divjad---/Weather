@@ -1,5 +1,6 @@
 package trafela.david.weather
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -7,14 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.Toast
 
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import okhttp3.OkHttpClient
 import retrofit2.*
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import android.support.v7.widget.DividerItemDecoration
-
 
 class MainActivity : AppCompatActivity() {
 

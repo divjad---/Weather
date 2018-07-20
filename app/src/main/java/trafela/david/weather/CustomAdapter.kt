@@ -5,18 +5,14 @@ package trafela.david.weather
  */
 import android.annotation.SuppressLint
 import android.content.Context
-import android.opengl.Visibility
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
-internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, val context: Context) : RecyclerView.Adapter<CustomAdapter.WeatherViewHolder>() {
+internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, private val context: Context) : RecyclerView.Adapter<CustomAdapter.WeatherViewHolder>() {
 
     private var longName: String? = null
     private var lastUpdated: String? = null
@@ -47,13 +43,14 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, val
 
         temperature = weatherList[position].temperature
 
-        if(temperature.toString() != "null"){
+        if(temperature != 255){
             if(temperature!! > 20) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
             }
             holder.temperatureText.text = temperature.toString() + "°C"
-        }else if(temperature.toString() == "null"){
+        }else if(temperature == 255){
             holder.temperatureText.text = ""
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white))
         }
 
         holder.windInfo.text = "$windDir $windSpeed m/s"
