@@ -11,6 +11,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import retrofit2.*
 import android.support.v7.widget.DividerItemDecoration
+import io.paperdb.Paper
+import okhttp3.ResponseBody
+import java.time.LocalDateTime
+import java.util.HashMap
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +46,8 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
                 Log.i("list", response.body()?.weatherDetail?.get(1)?.weatherIcon + "")
 
+                ManageCache().saveData(response.body()!!.weatherDetail!!)
+
                 adapter = CustomAdapter(response.body()?.weatherDetail!!, applicationContext)
                 recycler_view.adapter = adapter
             }
@@ -56,16 +62,25 @@ class MainActivity : AppCompatActivity() {
             call = weatherService.weatherInfo
             call.enqueue(object : Callback<WeatherInfo> {
                 override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
-                    Log.i("list", response.body()?.weatherDetail?.get(1)?.weatherIcon + "")
+                    val responseList: List<WeatherInfoBody> = response.body()!!.weatherDetail!!
 
-                    ManageCache().saveData(response.body()!!.weatherDetail!!)
+                    ManageCache().saveData(responseList)
 
-                    adapter = CustomAdapter(response.body()?.weatherDetail!!, applicationContext)
+                    val dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList")
+
+                    for(element in dataMap){
+                        val current = LocalDateTime.now()
+                        if(element.key.plusMinutes(30) < current){
+                            println(element.key)
+                        }
+                    }
+
+                    adapter = CustomAdapter(responseList, applicationContext)
                     recycler_view.adapter = adapter
                 }
 
                 override fun onFailure(call: Call<WeatherInfo>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Something went wrong...Please try again later!", Toast.LENGTH_SHORT).show()
                     println(t.localizedMessage)
                 }
             })

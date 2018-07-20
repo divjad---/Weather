@@ -5,12 +5,18 @@ package trafela.david.weather
  */
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
+import io.paperdb.Paper
+import java.time.LocalDateTime
+import java.util.HashMap
 
 internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, private val context: Context) : RecyclerView.Adapter<CustomAdapter.WeatherViewHolder>() {
 
@@ -19,6 +25,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
     private var windDir: String? = null
     private var windSpeed: String? = null
     private var weatherIcon: String? = null
+    private var windIcon: String? = null
 
     private var temperature: Int? = null
 
@@ -29,6 +36,17 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: CustomAdapter.WeatherViewHolder, position: Int) {
+        val dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList")
+
+        var temp = false
+
+        for(element in dataMap){
+            val current = LocalDateTime.now()
+            if(element.key.plusMinutes(30) >= current){
+                val list: List<WeatherInfoBody> = dataMap[element.key]!!
+                temp = list[position].temperature!! > 20
+            }
+        }
 
         longName = weatherList[position].longName
 
@@ -43,8 +61,10 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
         temperature = weatherList[position].temperature
 
+        windIcon = weatherList[position].windIcon
+
         if(temperature != 255){
-            if(temperature!! > 20) {
+            if(temperature!! > 20 && temp) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
             }
             holder.temperatureText.text = temperature.toString() + "°C"
@@ -52,6 +72,14 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
             holder.temperatureText.text = ""
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white))
         }
+
+        Picasso.with(context)
+                .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/" + weatherIcon + ".png")
+                .into(holder.icon)
+
+        Picasso.with(context)
+                .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/" + windIcon + ".png")
+                .into(holder.wIcon)
 
         holder.windInfo.text = "$windDir $windSpeed m/s"
         holder.name.text = longName
@@ -69,5 +97,8 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         var updated: TextView = itemView.findViewById(R.id.last_updated)
         var temperatureText: TextView = itemView.findViewById(R.id.temp_text)
         var windInfo: TextView = itemView.findViewById(R.id.wind_detail)
+
+        var icon: ImageView = itemView.findViewById(R.id.weather_icon)
+        var wIcon: ImageView = itemView.findViewById(R.id.wind_icon)
     }
 }

@@ -1,6 +1,9 @@
 package trafela.david.weather
 
+import android.content.Context
+import io.paperdb.Paper
 import java.time.LocalDateTime
+import java.util.HashMap
 import java.time.format.DateTimeFormatter
 
 
@@ -9,7 +12,7 @@ import java.time.format.DateTimeFormatter
  */
 class ManageCache{
 
-    var dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = HashMap()
+    var dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList")
 
     fun saveData(weatherList: List<WeatherInfoBody>){
         val current = LocalDateTime.now()
@@ -19,5 +22,9 @@ class ManageCache{
         println(formatted)
 
         dataMap[current] = weatherList
+
+        Paper.book().write("dataList", dataMap)
+
+        println(dataMap.keys)
     }
 }
