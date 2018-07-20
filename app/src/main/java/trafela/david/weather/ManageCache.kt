@@ -24,7 +24,5 @@ class ManageCache{
         dataMap[current] = weatherList
 
         Paper.book().write("dataList", dataMap)
-
-        println(dataMap.keys)
     }
 }
