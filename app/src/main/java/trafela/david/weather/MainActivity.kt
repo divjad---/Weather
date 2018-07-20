@@ -1,6 +1,5 @@
 package trafela.david.weather
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -10,9 +9,7 @@ import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import okhttp3.OkHttpClient
 import retrofit2.*
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import android.support.v7.widget.DividerItemDecoration
 
 class MainActivity : AppCompatActivity() {
@@ -20,10 +17,16 @@ class MainActivity : AppCompatActivity() {
     private var adapter: RecyclerView.Adapter<*>? = null
     private var layoutManager: RecyclerView.LayoutManager? = null
 
+    private val weatherService by lazy {
+        WeatherService.create()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        WeatherSyncJob.scheduleJob()
 
         layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
@@ -33,14 +36,6 @@ class MainActivity : AppCompatActivity() {
         recycler_view.addItemDecoration(dividerItemDecoration)
 
         recycler_view.adapter = adapter
-
-        val retrofit = Retrofit.Builder()
-                .baseUrl("http://meteo.arso.gov.si/")
-                .client(OkHttpClient())
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build()
-
-        val weatherService = retrofit.create(WeatherService::class.java)
 
         var call = weatherService.weatherInfo
         call.enqueue(object : Callback<WeatherInfo> {
@@ -62,6 +57,8 @@ class MainActivity : AppCompatActivity() {
             call.enqueue(object : Callback<WeatherInfo> {
                 override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
                     Log.i("list", response.body()?.weatherDetail?.get(1)?.weatherIcon + "")
+
+                    ManageCache().saveData(response.body()!!.weatherDetail!!)
 
                     adapter = CustomAdapter(response.body()?.weatherDetail!!, applicationContext)
                     recycler_view.adapter = adapter
