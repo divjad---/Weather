@@ -13,16 +13,16 @@ class WeatherInfoBody {
     @get:Element(name = "domain_longTitle", required = false)
     internal var longName: String? = null
 
-    @set:Element(name = "tsUpdated", required = false)
-    @get:Element(name = "tsUpdated", required = false)
+    @set:Element(name = "tsValid_issued", required = false)
+    @get:Element(name = "tsValid_issued", required = false)
     internal var lastUpdated: String? = null
 
     @set:Element(name = "t", required = false)
     @get:Element(name = "t", required = false)
     internal var temperature: Int? = null
 
-    @set:Element(name = "dd_longText", required = false)
-    @get:Element(name = "dd_longText", required = false)
+    @set:Element(name = "dd_shortText", required = false)
+    @get:Element(name = "dd_shortText", required = false)
     internal var windDir: String? = null
 
     @set:Element(name = "ff_val", required = false)
