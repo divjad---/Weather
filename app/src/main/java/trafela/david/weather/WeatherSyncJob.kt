@@ -1,12 +1,10 @@
 package trafela.david.weather
 
 import android.util.Log
-import android.widget.Toast
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobManager
 import com.evernote.android.job.JobRequest
-import kotlinx.android.synthetic.main.content_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,9 +25,9 @@ class WeatherSyncJob : Job() {
         val call = weatherService.weatherInfo
         call.enqueue(object : Callback<WeatherInfo> {
             override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
-                Log.i("list", response.body()?.weatherDetail?.get(1)?.weatherIcon + "")
+                val responseList: List<WeatherInfoBody> = response.body()!!.weatherDetail!!
 
-                ManageCache().saveData(response.body()!!.weatherDetail!!)
+                ManageCache().saveData(responseList)
             }
 
             override fun onFailure(call: Call<WeatherInfo>, t: Throwable) {
@@ -49,7 +47,7 @@ class WeatherSyncJob : Job() {
                 return
             }
             JobRequest.Builder(WeatherSyncJob.TAG)
-                    .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(7))
+                    .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(10))
                     .setUpdateCurrent(true) // calls cancelAllForTag(NoteSyncJob.TAG) for you
                     .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                     .setRequirementsEnforced(true)

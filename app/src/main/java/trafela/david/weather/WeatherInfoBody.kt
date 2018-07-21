@@ -27,7 +27,7 @@ class WeatherInfoBody {
 
     @set:Element(name = "ff_val", required = false)
     @get:Element(name = "ff_val", required = false)
-    internal var windSpeed: String? = ""
+    internal var windSpeed: String? = "0"
 
     @set:Element(name = "nn_icon", required = false)
     @get:Element(name = "nn_icon", required = false)

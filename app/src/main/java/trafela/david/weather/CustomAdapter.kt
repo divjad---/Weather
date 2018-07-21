@@ -5,7 +5,7 @@ package trafela.david.weather
  */
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.content.ContextCompat
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -39,13 +39,17 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
         var temp = false
 
-        for(element in dataMap){
-            val current = LocalDateTime.now()
-            if(element.key.plusMinutes(30) >= current){
-                val list: List<WeatherInfoBody> = dataMap[element.key]!!
-                temp = list[position].temperature!! > 20
+
+            for (element in dataMap) {
+                val current = LocalDateTime.now()
+                if (element.key.plusMinutes(30) >= current) {
+                    val list: List<WeatherInfoBody> = dataMap[element.key]!!
+                    if (list.size != position && weatherList[position].longName == list[position].longName) {
+                        temp = list[position].temperature!! > 20
+                    }
+                }
             }
-        }
+
 
         longName = weatherList[position].longName
 
@@ -64,20 +68,20 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
         if(temperature != 255){
             if(temperature!! > 20 && temp) {
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
+                holder.itemView.setBackgroundColor(Color.parseColor("#E57373"))
             }
             holder.temperatureText.text = temperature.toString() + "°C"
         }else if(temperature == 255){
             holder.temperatureText.text = ""
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white))
+            holder.itemView.setBackgroundColor(Color.parseColor("#F8F8F8"))
         }
 
         Picasso.with(context)
-                .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/" + weatherIcon + ".png")
+                .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/$weatherIcon.png")
                 .into(holder.icon)
 
         Picasso.with(context)
-                .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/" + windIcon + ".png")
+                .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/$windIcon.png")
                 .into(holder.wIcon)
 
         holder.windInfo.text = "$windDir $windSpeed m/s"
