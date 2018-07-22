@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                         println(t.localizedMessage)
                     }
                 })
-            }else{
+            }else if(!NetworkChecks().isOnline() && recycler_view.adapter == null){
                 val cacheList: List<WeatherInfoBody>? = ManageCache().loadFromCache()
 
                 if(cacheList != null) {

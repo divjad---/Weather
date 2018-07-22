@@ -12,7 +12,7 @@ import kotlin.collections.HashMap
  */
 class ManageCache{
 
-    var dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = HashMap()
+    var dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList", HashMap())
 
     fun saveData(weatherList: List<WeatherInfoBody>){
 
@@ -29,16 +29,18 @@ class ManageCache{
     }
 
     fun loadFromCache(): List<WeatherInfoBody>?{
+        return if(dataMap.size > 0) {
+            val tempList: MutableList<LocalDateTime> = ArrayList()
 
-        val tempList: MutableList<LocalDateTime> = ArrayList()
+            for (element in dataMap) {
+                tempList.add(element.key)
+            }
 
-        for (element in dataMap) {
-            tempList.add(element.key)
+            val latest = Collections.max(tempList)
+
+            dataMap[latest]!!
+        }else{
+            null
         }
-
-        val latest = Collections.max(tempList)
-
-        return dataMap[latest]!!
-
     }
 }
