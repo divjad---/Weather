@@ -5,8 +5,6 @@ package trafela.david.weather
  */
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -28,6 +26,10 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
     private var windSpeed: String? = null
     private var weatherIcon: String? = null
     private var windIcon: String? = null
+    private var humidity: String? = null
+    private var visibility: String? = null
+    private var sunrise: String? = null
+    private var sunset: String? = null
 
     private var mExpandedPosition: Int = -1
     private var temperature: Int? = null
@@ -68,6 +70,16 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
         windIcon = weatherList[position].windIcon
 
+        humidity = weatherList[position].humidity
+
+        visibility = weatherList[position].visibility
+
+        sunrise = weatherList[position].sunrise
+        sunrise = sunrise?.split(" ")!![1]
+
+        sunset = weatherList[position].sunset
+        sunset = sunset?.split(" ")!![1]
+
         if(temperature != 255){
             if(temperature!! > 20 && temp) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.temp_above))
@@ -91,10 +103,22 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         holder.windInfo.text = "$windDir $windSpeed m/s"
         holder.name.text = longName
 
-        holder.updated.text = lastUpdated
+        holder.updated.text = "Updated: $lastUpdated"
+
+        holder.humidityText.text = "Humidity: $humidity%"
+
+        holder.visibilityText.text = "Visibility: $visibility km"
+
+        holder.sunsetText.text = "Sunset: $sunset"
+        holder.sunriseText.text = "Sunrise: $sunrise"
 
         val isExpanded = position == mExpandedPosition
-        holder.details.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
+        holder.humidityText.visibility = if (isExpanded && humidity != "") View.VISIBLE else View.GONE
+        holder.visibilityText.visibility = if (isExpanded && visibility != "") View.VISIBLE else View.GONE
+        holder.sunriseText.visibility = if (isExpanded && sunrise != "") View.VISIBLE else View.GONE
+        holder.sunsetText.visibility = if (isExpanded && sunset != "") View.VISIBLE else View.GONE
+
         holder.itemView.isActivated = isExpanded
         holder.itemView.setOnClickListener {
             mExpandedPosition = if (isExpanded) -1 else position
@@ -112,7 +136,10 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         var updated: TextView = itemView.findViewById(R.id.last_updated)
         var temperatureText: TextView = itemView.findViewById(R.id.temp_text)
         var windInfo: TextView = itemView.findViewById(R.id.wind_detail)
-        var details: TextView = itemView.findViewById(R.id.details)
+        var humidityText: TextView = itemView.findViewById(R.id.humidity_text)
+        var visibilityText: TextView = itemView.findViewById(R.id.visibility_text)
+        var sunriseText: TextView = itemView.findViewById(R.id.sunrise_text)
+        var sunsetText: TextView = itemView.findViewById(R.id.sunset_text)
 
         var icon: ImageView = itemView.findViewById(R.id.weather_icon)
         var wIcon: ImageView = itemView.findViewById(R.id.wind_icon)

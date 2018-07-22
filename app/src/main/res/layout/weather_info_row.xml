@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:background="@drawable/details_background"
     android:layout_margin="3dp"
-    >
+    tools:style="@style/CardView">
 
-    <RelativeLayout
+    <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -25,13 +27,12 @@
             android:textAllCaps="false"
             android:textColor="@android:color/black"
             android:textSize="22sp"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/city_name"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
@@ -40,8 +41,7 @@
             android:textAlignment="viewStart"
             android:textColor="@android:color/black"
             android:textSize="17sp"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/weather_icon"
@@ -61,8 +61,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginBottom="10dp"
             android:layout_below="@+id/city_name"
-            app:srcCompat="@mipmap/ic_launcher"
-            />
+            app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/wind_detail"
@@ -74,8 +73,7 @@
             android:layout_marginTop="1dp"
             android:layout_marginBottom="10dp"
             android:textColor="@android:color/black"
-            android:text="SW 33 m/s"
-            />
+            android:text="SW 33 m/s" />
 
         <TextView
             android:id="@+id/last_updated"
@@ -85,20 +83,59 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
             android:textColor="@android:color/black"
-            android:text="11:29:57"
-            />
+            android:text="11:29:57" />
 
         <TextView
-            android:id="@+id/details"
+            android:id="@+id/humidity_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wind_icon"
-            android:layout_toEndOf="@+id/weather_icon"
-            android:layout_marginTop="60dp"
+            android:layout_below="@id/temp_text"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_alignParentStart="true"
+            android:text="Humidity: 99%"
             android:textColor="@android:color/black"
-            android:visibility="gone"
-            android:text="DETAILS"
-            />
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/visibility_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/temp_text"
+            android:layout_marginTop="52dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_alignParentStart="true"
+            android:text="Visibility: "
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/sunrise_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/wind_detail"
+            android:layout_below="@id/temp_text"
+            android:layout_marginTop="30dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:text="Sunrise: "
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/sunset_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/wind_detail"
+            android:layout_below="@id/temp_text"
+            android:layout_marginTop="52dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:text="Sunset: "
+            android:visibility="visible"/>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

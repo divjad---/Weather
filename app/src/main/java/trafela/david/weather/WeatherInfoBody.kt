@@ -37,4 +37,20 @@ class WeatherInfoBody {
     @get:Element(name = "ddff_icon", required = false)
     internal var windIcon: String? = ""
 
+    @set:Element(name = "rh", required = false)
+    @get:Element(name = "rh", required = false)
+    internal var humidity: String? = ""
+
+    @set:Element(name = "vis_value", required = false)
+    @get:Element(name = "vis_value", required = false)
+    internal var visibility: String? = ""
+
+    @set:Element(name = "sunrise", required = false)
+    @get:Element(name = "sunrise", required = false)
+    internal var sunrise: String? = ""
+
+    @set:Element(name = "sunset", required = false)
+    @get:Element(name = "sunset", required = false)
+    internal var sunset: String? = ""
+
 }
