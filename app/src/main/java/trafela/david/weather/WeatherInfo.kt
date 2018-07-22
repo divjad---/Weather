@@ -9,6 +9,8 @@ import org.simpleframework.xml.Root
  */
 @Root(name = "data", strict = false)
 class WeatherInfo {
+
+    //get weather details for every city
     @set:ElementList(entry = "metData", inline = true)
     @get:ElementList(entry = "metData", inline = true)
     internal var weatherDetail: List<WeatherInfoBody>? = null

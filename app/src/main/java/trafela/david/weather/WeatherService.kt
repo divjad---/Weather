@@ -11,9 +11,11 @@ import retrofit2.http.GET
  */
 interface WeatherService {
 
+    //initialize call
     @get:GET("uploads/probase/www/observ/surface/text/sl/observation_si_latest.xml")
     val weatherInfo: Call<WeatherInfo>
 
+    //initialize retrofit instance function
     companion object {
         fun create(): WeatherService {
 

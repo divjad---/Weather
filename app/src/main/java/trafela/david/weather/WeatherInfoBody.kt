@@ -9,6 +9,8 @@ import org.simpleframework.xml.Element
 @Root(name = "metData", strict = false)
 class WeatherInfoBody {
 
+    //set and initialize all data that we want from xml
+
     @set:Element(name = "domain_longTitle", required = false)
     @get:Element(name = "domain_longTitle", required = false)
     internal var longName: String? = ""

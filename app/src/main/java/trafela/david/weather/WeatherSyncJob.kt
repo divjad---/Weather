@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit
  */
 class WeatherSyncJob : Job() {
 
+    //get retrofit instance
     private val weatherService by lazy {
         WeatherService.create()
     }
@@ -22,11 +23,14 @@ class WeatherSyncJob : Job() {
     override fun onRunJob(params: Job.Params): Job.Result {
         Log.i("test", "JOB RUNNED")
 
+        //initialize call
         val call = weatherService.weatherInfo
         call.enqueue(object : Callback<WeatherInfo> {
             override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
+                //initialize list with response
                 val responseList: List<WeatherInfoBody> = response.body()!!.weatherDetail!!
 
+                //save list to cache
                 ManageCache().saveData(responseList)
             }
 
@@ -46,6 +50,8 @@ class WeatherSyncJob : Job() {
             if (!jobRequests.isEmpty()) {
                 return
             }
+
+            //set under which conditions job will run
             JobRequest.Builder(WeatherSyncJob.TAG)
                     .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(10))
                     .setUpdateCurrent(true) // calls cancelAllForTag(NoteSyncJob.TAG) for you

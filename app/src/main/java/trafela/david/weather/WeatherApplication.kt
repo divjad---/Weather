@@ -10,6 +10,7 @@ import io.paperdb.Paper
  */
 class WeatherApplication : Application() {
 
+    //initialize job manager and paper
     override fun onCreate() {
         super.onCreate()
         JobManager.create(this).addJobCreator(WeatherJobCreator())

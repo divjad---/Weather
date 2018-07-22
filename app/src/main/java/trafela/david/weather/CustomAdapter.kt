@@ -20,6 +20,7 @@ import java.util.HashMap
 
 internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, private val context: Context) : RecyclerView.Adapter<CustomAdapter.WeatherViewHolder>() {
 
+    //initialize variables
     private var longName: String? = null
     private var lastUpdated: String? = null
     private var windDir: String? = null
@@ -41,8 +42,10 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
+        //get cached data
         val dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList")
 
+        //check if temperature was above 20 for past half hour and set variable
         var temp = false
 
         for (element in dataMap) {
@@ -55,6 +58,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
             }
         }
 
+        //set values to variables with latest info
         longName = weatherList[position].longName
 
         lastUpdated = weatherList[position].lastUpdated
@@ -80,6 +84,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         sunset = weatherList[position].sunset
         sunset = sunset?.split(" ")!![1]
 
+        //change color of background if temperature was above 20
         if(temperature != 255){
             if(temperature!! > 20 && temp) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.temp_above))
@@ -92,6 +97,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.details_background))
         }
 
+        //load images
         Picasso.with(context)
                 .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/$weatherIcon.png")
                 .into(holder.icon)
@@ -100,6 +106,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
                 .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/$windIcon.png")
                 .into(holder.wIcon)
 
+        //set UI elements
         holder.windInfo.text = "$windDir $windSpeed m/s"
         holder.name.text = longName
 
@@ -112,6 +119,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         holder.sunsetText.text = "Sunset: $sunset"
         holder.sunriseText.text = "Sunrise: $sunrise"
 
+        //initialize details screen and handle expansion
         val isExpanded = position == mExpandedPosition
 
         holder.humidityText.visibility = if (isExpanded && humidity != "") View.VISIBLE else View.GONE
@@ -132,6 +140,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
     internal class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        //initialize UI elements
         var name: TextView = itemView.findViewById(R.id.city_name)
         var updated: TextView = itemView.findViewById(R.id.last_updated)
         var temperatureText: TextView = itemView.findViewById(R.id.temp_text)
