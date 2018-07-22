@@ -5,7 +5,9 @@ package trafela.david.weather
  */
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,7 @@ import io.paperdb.Paper
 import java.time.LocalDateTime
 import java.util.HashMap
 
+
 internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, private val context: Context) : RecyclerView.Adapter<CustomAdapter.WeatherViewHolder>() {
 
     private var longName: String? = null
@@ -26,6 +29,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
     private var weatherIcon: String? = null
     private var windIcon: String? = null
 
+    private var mExpandedPosition: Int = -1
     private var temperature: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomAdapter.WeatherViewHolder {
@@ -34,22 +38,20 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
     }
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
-    override fun onBindViewHolder(holder: CustomAdapter.WeatherViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         val dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList")
 
         var temp = false
 
-
-            for (element in dataMap) {
-                val current = LocalDateTime.now()
-                if (element.key.plusMinutes(30) >= current) {
-                    val list: List<WeatherInfoBody> = dataMap[element.key]!!
-                    if (list.size != position && weatherList[position].longName == list[position].longName) {
-                        temp = list[position].temperature!! > 20
-                    }
+        for (element in dataMap) {
+            val current = LocalDateTime.now()
+            if (element.key.plusMinutes(30) >= current) {
+                val list: List<WeatherInfoBody> = dataMap[element.key]!!
+                if (list.size != position && weatherList[position].longName == list[position].longName) {
+                    temp = list[position].temperature!! > 20
                 }
             }
-
+        }
 
         longName = weatherList[position].longName
 
@@ -68,12 +70,14 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
         if(temperature != 255){
             if(temperature!! > 20 && temp) {
-                holder.itemView.setBackgroundColor(Color.parseColor("#E57373"))
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.temp_above))
+            }else{
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.details_background))
             }
             holder.temperatureText.text = temperature.toString() + "°C"
         }else if(temperature == 255){
             holder.temperatureText.text = ""
-            holder.itemView.setBackgroundColor(Color.parseColor("#F8F8F8"))
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.details_background))
         }
 
         Picasso.with(context)
@@ -88,6 +92,14 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         holder.name.text = longName
 
         holder.updated.text = lastUpdated
+
+        val isExpanded = position == mExpandedPosition
+        holder.details.visibility = if (isExpanded) View.VISIBLE else View.GONE
+        holder.itemView.isActivated = isExpanded
+        holder.itemView.setOnClickListener {
+            mExpandedPosition = if (isExpanded) -1 else position
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -100,6 +112,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         var updated: TextView = itemView.findViewById(R.id.last_updated)
         var temperatureText: TextView = itemView.findViewById(R.id.temp_text)
         var windInfo: TextView = itemView.findViewById(R.id.wind_detail)
+        var details: TextView = itemView.findViewById(R.id.details)
 
         var icon: ImageView = itemView.findViewById(R.id.weather_icon)
         var wIcon: ImageView = itemView.findViewById(R.id.wind_icon)
