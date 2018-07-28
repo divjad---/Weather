@@ -20,20 +20,7 @@ import java.util.HashMap
 
 internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, private val context: Context) : RecyclerView.Adapter<CustomAdapter.WeatherViewHolder>() {
 
-    //initialize variables
-    private var longName: String? = null
-    private var lastUpdated: String? = null
-    private var windDir: String? = null
-    private var windSpeed: String? = null
-    private var weatherIcon: String? = null
-    private var windIcon: String? = null
-    private var humidity: String? = null
-    private var visibility: String? = null
-    private var sunrise: String? = null
-    private var sunset: String? = null
-
     private var mExpandedPosition: Int = -1
-    private var temperature: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomAdapter.WeatherViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.weather_info_row, parent, false)
@@ -59,34 +46,34 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         }
 
         //set values to variables with latest info
-        longName = weatherList[position].longName
+        val longName: String = weatherList[position].longName!!
 
-        lastUpdated = weatherList[position].lastUpdated
-        lastUpdated = lastUpdated?.split(" ")!![1]
+        var lastUpdated: String = weatherList[position].lastUpdated!!
+        lastUpdated = lastUpdated.split(" ")[1]
 
-        windDir = weatherList[position].windDir
+        val windDir: String = weatherList[position].windDir!!
 
-        windSpeed = weatherList[position].windSpeed
+        val windSpeed: String = weatherList[position].windSpeed!!
 
-        weatherIcon = weatherList[position].weatherIcon
+        val weatherIcon: String = weatherList[position].weatherIcon!!
 
-        temperature = weatherList[position].temperature
+        val temperature: Int = weatherList[position].temperature!!
 
-        windIcon = weatherList[position].windIcon
+        val windIcon: String = weatherList[position].windIcon!!
 
-        humidity = weatherList[position].humidity
+        val humidity: String = weatherList[position].humidity!!
 
-        visibility = weatherList[position].visibility
+        val visibility: String = weatherList[position].visibility!!
 
-        sunrise = weatherList[position].sunrise
-        sunrise = sunrise?.split(" ")!![1]
+        var sunrise: String = weatherList[position].sunrise!!
+        sunrise = sunrise.split(" ")[1]
 
-        sunset = weatherList[position].sunset
-        sunset = sunset?.split(" ")!![1]
+        var sunset: String = weatherList[position].sunset!!
+        sunset = sunset.split(" ")[1]
 
         //change color of background if temperature was above 20
         if(temperature != 255){
-            if(temperature!! > 20 && temp) {
+            if(temperature > 20 && temp) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.temp_above))
             }else{
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.details_background))
@@ -108,6 +95,7 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
 
         //set UI elements
         holder.windInfo.text = "$windDir $windSpeed m/s"
+
         holder.name.text = longName
 
         holder.updated.text = "Updated: $lastUpdated"
