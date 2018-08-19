@@ -27,6 +27,12 @@ class ManageCache{
         //add list to hash map
         dataMap[current] = weatherList
 
+        for (element in dataMap) {
+            if(current.minusMinutes(40) >= element.key){
+                dataMap.remove(element.key)
+            }
+        }
+
         //save hash map in cache
         Paper.book().write("dataList", dataMap)
 
