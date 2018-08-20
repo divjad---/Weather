@@ -12,7 +12,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import android.support.design.widget.Snackbar
 import android.view.View
+import io.paperdb.Paper
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.jvm.java
 
