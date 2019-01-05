@@ -87,10 +87,12 @@ internal class CustomAdapter(private val weatherList: List<WeatherInfoBody>, pri
         //load images
         Picasso.with(context)
                 .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/$weatherIcon.png")
+                .fit()
                 .into(holder.icon)
 
         Picasso.with(context)
                 .load("http://meteo.arso.gov.si/uploads/meteo/style/img/weather/$windIcon.png")
+                .fit()
                 .into(holder.wIcon)
 
         //set UI elements

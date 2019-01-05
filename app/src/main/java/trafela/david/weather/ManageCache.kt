@@ -14,6 +14,7 @@ class ManageCache{
 
     //get all lists from cache
     var dataMap: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList", HashMap())
+    var dataMapTemp: HashMap<LocalDateTime, List<WeatherInfoBody>> = Paper.book().read("dataList", HashMap())
 
     //initialize function to save list in cache
     fun saveData(weatherList: List<WeatherInfoBody>){
@@ -26,6 +27,14 @@ class ManageCache{
 
         //add list to hash map
         dataMap[current] = weatherList
+
+        for (element in dataMap) {
+            if (element.key.plusMinutes(30) >= current) {
+                dataMapTemp[element.key] = element.value
+            }
+        }
+
+        dataMap = dataMapTemp
 
         //save hash map in cache
         Paper.book().write("dataList", dataMap)

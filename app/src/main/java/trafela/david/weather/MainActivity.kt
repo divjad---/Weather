@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     //initialize handler for refreshing every 30s
     var h = Handler()
-    var delay = 30 * 1000 //1 second=1000 millisecond, 30*1000=30seconds
+    var delay = 60 * 1000 //1 second=1000 millisecond, 30*1000=30seconds
     var runnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         //schedule job every 15 minutes
         WeatherSyncJob.scheduleJob()
+
+        recycler_view.setHasFixedSize(true)
+        recycler_view.setItemViewCacheSize(20)
+        recycler_view.isDrawingCacheEnabled = true
+        recycler_view.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
         val viewModel = ViewModelProviders.of(this).get(WeatherItemViewModel::class.java)
         viewModel.getList()!!.observe(this, Observer { list ->
